@@ -1,12 +1,7 @@
-#logging:
-#  level:
-#    org.springframework: DEBUG
 spring:
   config:
     activate:
       on-profile: local
-
-  # H2 데이터베이스 설정
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
     driver-class-name: org.h2.Driver
@@ -17,13 +12,17 @@ spring:
       enabled: true
       path: /h2-console
 
+########################################################################################################################
+# Swagger
+# springdoc.swagger-ui.csrf.enabled=true: Swagger UI를 통해 API 호출 시 CSRF 토큰을 포함시켜 CSRF 위조 방지 예외 발생하지 않음.
+########################################################################################################################
 springdoc:
-  packages-to-scan: com.example.tlo.api
+  packages-to-scan: co.kr.abacus.base.api
   default-produces-media-type: application/json;charset=UTF-8
   default-consumes-media-type: application/json;charset=UTF-8
-  title: TLO Sample local api swagger
-  version: v1.0.0
-  description: LAMO :)
+  title: Abacus base project
+  version: v0.0.0
+  description: 애버포애버
   cache:
     disabled: true
   swagger-ui:
@@ -38,14 +37,18 @@ springdoc:
     groups:
       enabled: true
   servers:
-    - url: http://localhost:8080/tlo/api
+    - url: http://localhost:8080/base/api
       description: Localhost Server
 
+########################################################################################################################
+# 통합 통계 로그
+# logger.tlo.instance-code=999: 다중화 서버 환경에서 각 서버별 instance 번호를 각 서버의 환경변수로 제어하는데, 그게 미지정된 경우 999로 표현
+########################################################################################################################
 logger:
   tlo:
     enable: true
-    service-name: tlo-sample-was
-    instance-name: tlo-sample
+    service-name: base-project
+    instance-name: base-project-instance
     instance-code: '999'
     base-dir: ./logs/tlo
     interval-minutes: 5
@@ -55,16 +58,27 @@ logger:
 
 ########################################################################################################################
 # LG U+ APIM
+# apim.domain-public: apim 공개 서버
+# apim.domain-private: apim 비공개 서버
+# apim.client-id: 내 APIM 프로젝트에서 조회 가능
+# apim.client-secret: 내 APIM 프로젝트에서 조회 가능
+# apim.hmac.shared-key: 외부 API에서 APIM Provider 서버에 접근할 때 복호화 키
 ########################################################################################################################
 apim:
-  # apim 공개 서버
   domain-public: "https://dev-openapi-pb.lguplus.co.kr"
-  # apim 비공개 서버
   domain-private: "https://dev-openapi-pv.lguplus.co.kr"
-  # client-id: 내 APIM 프로젝트에서 조회 가능
-  client-id: ENC(EHQvhAHs1ehcTjFq/VFZ2KNHWiCLQHBvVpC7/0xsaJ33JPD3sPyv4GjtKmznLcF7u0L/EJkq69E4UQBDTbgw+fcuF2A1Adgh1tntTgYwTQo=)
-  # client-secret: 내 APIM 프로젝트에서 조회 가능
-  client-secret: ENC(Wa+naDAvGxQxrpnO2NfCKZeWVHOGQ1MG4vLutz7xxVF/TGO6cLaQepMV/tQ66B0b7pPkWAc4poa+pAwNPMC/gWsLc9EY81lCFjA/Xu4Cxu4=)
-  hmac:
-    # hmac.shared-key: 외부 API에서 APIM Provider 서버에 접근할 때
-    shared-key: ENC(N1TFps+HtWB4qkruGGphKgSqMuE3PVHcQ3P7kSphhrk/wFIUMZ09vq064OlE3E6TW4akxkNDwpPLJJegIkXXEFlftcLc3C298qb+FGtLYTj+2G1gW3lbV9/hO/me0T6IXwoxo6NFdjhI8BgB+WTobZHToFK5CRNKVDIsv9AVz3U3TGhgbZKvAEDvhkuC2lVHWsEzUbPUQHl1q3eYjpzUNjKagn0Sf0wyYZFZe/Zhc2M=)
+  client-id: cliend-id
+  client-secret: client-secret
+  hmac-shared-key: ENC(N1TFps+HtWB4qkruGGphKgSqMuE3PVHcQ3P7kSphhrk/wFIUMZ09vq064OlE3E6TW4akxkNDwpPLJJegIkXXEFlftcLc3C298qb+FGtLYTj+2G1gW3lbV9/hO/me0T6IXwoxo6NFdjhI8BgB+WTobZHToFK5CRNKVDIsv9AVz3U3TGhgbZKvAEDvhkuC2lVHWsEzUbPUQHl1q3eYjpzUNjKagn0Sf0wyYZFZe/Zhc2M=)
+
+
+
+########################################################################################################################
+# GCP
+# simba-jdbc-url: GCP Simba Library를 사용한 JDBC 커넥션 풀 연결 URL
+# impersonator-account-email: 권한을 가장받을 서비스 계정 (깡통 계정)
+########################################################################################################################
+gcp:
+  simba-jdbc-url: jdbc:bigquery://https://www.googleapis.com/bigquery/v2:443;ProjectId=%s;OAuthType=3;OAuthAccessToken=%s
+  project-id: your-project-id
+  impersonator-account-email: your-impersonator-account-email

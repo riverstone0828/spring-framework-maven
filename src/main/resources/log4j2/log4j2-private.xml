@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Properties>
+        <Property name="LOG_PATH">C:\dev\log</Property>
+        <Property name="SERVICE_LOG_PATTERN">[%X{logKey}][%d{yyyy-MM-dd HH:mm:ss.SSS}][%5p][%c#%M] %m%n%xwEx</Property>
+        <Property name="DEFAULT_PATTERN">[%d{yyyy-MM-dd HH:mm:ss.SSS}] %5p ${sys:PID} --- [%15.15t] %-40.40c{1.} : %m%n%xwEx</Property>
+        <Property name="COLOR_PATTERN">[%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint}] %clr{%5p} %clr{${sys:PID}}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c}{cyan} %clr{:}{faint} %m%n%xwEx</Property>
+        <Property name="APPLICATION_NAME">springboot-was-base</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${SERVICE_LOG_PATTERN}"/>
+        </Console>
+
+       <RollingFile name ="RollingFileAppender">
+            <FileName>${LOG_PATH}/${APPLICATION_NAME}.log</FileName>
+            <FilePattern>${LOG_PATH}/${APPLICATION_NAME}.${env:INSTANCE_NO:-999}.%d{yyyy-MM-dd-hh-mm}.%i.log</FilePattern>
+            <PatternLayout>
+                <Pattern>${SERVICE_LOG_PATTERN}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name ="RollingFileErrorAppender">
+            <FileName>${LOG_PATH}/${APPLICATION_NAME}_error.log</FileName>
+            <FilePattern>${LOG_PATH}/${APPLICATION_NAME}_error.${env:INSTANCE_NO:-999}.%d{yyyy-MM-dd-hh-mm}.%i.log</FilePattern>
+            <PatternLayout>
+                <Pattern>${SERVICE_LOG_PATTERN}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- Root : 일반적인 로그 정책, 반드시 하나 정의해야함 -->
+        <Root level="INFO" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="RollingFileAppender"/>
+            <AppenderRef ref="RollingFileErrorAppender" level="ERROR" />
+        </Root>
+
+        <Logger name="org.springframework" level="ERROR" additivity="false">
+            <AppenderRef ref="ConsoleAppender" />
+            <AppenderRef ref="RollingFileAppender"/>
+            <AppenderRef ref="RollingFileErrorAppender" level="ERROR" />
+        </Logger>
+
+        <Logger name="com.lguplus.bizon" level="DEBUG" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>`
+            <AppenderRef ref="RollingFileAppender"/>
+            <AppenderRef ref="RollingFileErrorAppender" level="ERROR" />
+        </Logger>
+
+        <Logger name="mybatis.type" level="TRACE" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="RollingFileAppender"/>
+            <AppenderRef ref="RollingFileErrorAppender" level="ERROR" />
+        </Logger>
+<!--
+        <Logger name="org.springframework.session" level="DEBUG" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+        </Logger>
+        <Logger name="org.springframework.session.jdbc" level="DEBUG" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+        </Logger>-->
+
+    </Loggers>
+</Configuration>

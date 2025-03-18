@@ -1,0 +1,48 @@
+###
+GET {{host}}/exception/bind-exception/create
+Content-Type: application/json
+
+{
+  "name": "안녕"
+}
+
+###
+GET {{host}}/exception/bind-exception/update
+Content-Type: application/json
+
+{
+  "id": -1,
+  "name": ""
+}
+
+
+###
+GET {{host}}/exception/forbidden
+
+###
+GET {{host}}/exception/handler-validation
+
+###
+GET {{host}}/exception/internal-server-error
+
+###
+GET {{host}}/exception/missing-param
+
+###
+GET {{host}}/exception/missing-requirement-exception
+
+###
+GET {{host}}/exception/server-error
+
+###
+GET {{host}}/exception/unauthorized
+
+###
+POST {{host}}/exception/method-argument-validation
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "애버커스",
+  "description": "애버커스 Good"
+}

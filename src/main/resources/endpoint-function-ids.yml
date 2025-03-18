@@ -1,0 +1,22 @@
+# TLO 로그에 사용될 기능 ID 정의
+base-project:
+  api:
+    permit-all-func-ids:
+      - method: POST
+        uri: /write-me-tlo
+        func-id: 'FN01001'
+      - method: POST
+        uri: /dont-write-me-tlo
+        func-id: 'FN01002'
+      - method: POST
+        uri: /create-session
+        func-id: 'FN01003'
+      - method: POST
+        uri: /set-log-key-header
+        func-id: 'FN01004'
+      - method: POST
+        uri: /result-code-fail
+        func-id: 'FN01005'
+      - method: GET
+        uri: /sample
+        func-id: 'FN01006'
