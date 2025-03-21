@@ -1,0 +1,35 @@
+### 1. HAPPY
+POST http://localhost:8080/base/api/validator/method-argument-validation
+Content-Type: application/json
+
+{
+  "gender": "male",
+  "genderNumber": 1
+}
+
+### 2. EXCEPTION - gender
+POST http://localhost:8080/base/api/validator/method-argument-validation
+Content-Type: application/json
+
+{
+  "gender": "male1",
+  "genderNumber": 1
+}
+
+### 3. EXCEPTION - genderNumber
+POST http://localhost:8080/base/api/validator/method-argument-validation
+Content-Type: application/json
+
+{
+  "gender": "male",
+  "genderNumber": 3
+}
+
+### 3. EXCEPTION - gender, genderNumber
+POST http://localhost:8080/base/api/validator/method-argument-validation
+Content-Type: application/json
+
+{
+  "gender": "male1",
+  "genderNumber": 3
+}
