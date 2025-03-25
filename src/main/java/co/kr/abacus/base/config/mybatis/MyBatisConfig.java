@@ -1,7 +1,7 @@
 package co.kr.abacus.base.config.mybatis;
 
 import co.kr.abacus.base.config.gcp.GCPProperties;
-import co.kr.abacus.base.config.gcp.GCPServiceAccountImpersonator;
+import co.kr.abacus.base.config.gcp.GCPServiceToken;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -18,7 +18,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class MyBatisConfig {
 
-    private final GCPServiceAccountImpersonator gcpServiceAccountImpersonator;
+    private final GCPServiceToken gcpServiceToken;
     private final GCPProperties gcpProperties;
 //    @Bean
 //    @ConfigurationProperties(prefix = "spring.datasource")
@@ -42,7 +42,7 @@ public class MyBatisConfig {
 
     @Bean
     public DataSource bigQueryDataSource() throws IOException {
-        String accessToken = gcpServiceAccountImpersonator.getAccessToken();
+        String accessToken = gcpServiceToken.getAccessToken();
         String jdbcUrl = String.format(gcpProperties.getSimbaJdbcUrl(), gcpProperties.getProjectId(), accessToken);
 
         // HikariDataSource 설정

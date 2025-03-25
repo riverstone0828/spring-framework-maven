@@ -15,9 +15,9 @@ public class UserAgentUtil {
         Pattern pattern = Pattern.compile(REGEX_DEVICE);
         Matcher matcher = pattern.matcher(userAgent);
 
-        Optional<UserDeviceProperties> userDeviceProperty = null;
+        Optional<UserDeviceProperties> userDeviceProperty;
         if (matcher.find()) {
-            log.debug("getDeviceInfo : " + matcher.group(1));
+            log.debug("getDeviceInfo : {}", matcher.group(1));
             String deviceInfo = matcher.group(1);
             userDeviceProperty = devices.stream().filter(o -> o.getName().equals(deviceInfo)).findFirst();
             result.setDevice("MOBILE");

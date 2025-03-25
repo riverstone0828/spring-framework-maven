@@ -81,4 +81,3 @@ apim:
 gcp:
   simba-jdbc-url: jdbc:bigquery://https://www.googleapis.com/bigquery/v2:443;ProjectId=%s;OAuthType=3;OAuthAccessToken=%s
   project-id: your-project-id
-  impersonator-account-email: your-impersonator-account-email
