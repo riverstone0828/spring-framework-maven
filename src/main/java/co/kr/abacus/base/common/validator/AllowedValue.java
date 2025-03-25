@@ -23,12 +23,6 @@ public @interface AllowedValue {
     // 기본 빈 enum 클래스 (기본값 설정을 위해 사용)
     enum DefaultEnum {}
 
-    @Deprecated
-    String[] allowedValues() default {};
-
-    @Deprecated
-    String[] excludedValues() default {};
-
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};

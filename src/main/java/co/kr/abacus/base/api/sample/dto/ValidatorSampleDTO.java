@@ -9,6 +9,9 @@ import lombok.Setter;
 @Setter
 public class ValidatorSampleDTO {
 
+    @AllowedValue(cmmCdId = "COMMON_CODE_ID")
+    private String cmmCdIdManaged;
+
     @AllowedValue(allowedValuesEnumClass = AllowedValueConstant.AllowedGenders.class)
     private String gender;
 

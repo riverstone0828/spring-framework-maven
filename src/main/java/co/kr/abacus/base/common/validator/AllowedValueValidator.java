@@ -1,8 +1,9 @@
 package co.kr.abacus.base.common.validator;
 
+import co.kr.abacus.base.common.dao.CommonDao;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.util.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
@@ -10,6 +11,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class AllowedValueValidator implements ConstraintValidator<AllowedValue, Object> {
+
+    @Autowired
+    private CommonDao commonDao;
 
     private Set<String> allowedValues;
 
@@ -21,8 +25,8 @@ public class AllowedValueValidator implements ConstraintValidator<AllowedValue, 
         // # TODO 공통 코드로 관리하는 경우 조회 로직 구현
         // ###############################################################################
         if (StringUtils.hasText(constraintAnnotation.cmmCdId())) {
-//            List<String> dbManagedAllowedValues = commonDao.selectList("fileName.queryId", constraintAnnotation.cmmCdId());
-//            allowedValueList.addAll(dbManagedAllowedValues);
+            List<String> dbManagedAllowedValues = commonDao.selectList("fileName.queryId", constraintAnnotation.cmmCdId());
+            allowedValueList.addAll(dbManagedAllowedValues);
         }
 
         // ###############################################################################
