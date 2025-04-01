@@ -25,8 +25,8 @@ public class AllowedValueValidator implements ConstraintValidator<AllowedValue, 
         // # TODO 공통 코드로 관리하는 경우 조회 로직 구현
         // ###############################################################################
         if (StringUtils.hasText(constraintAnnotation.cmmCdId())) {
-            List<String> dbManagedAllowedValues = commonDao.selectList("fileName.queryId", constraintAnnotation.cmmCdId());
-            allowedValueList.addAll(dbManagedAllowedValues);
+//            List<String> dbManagedAllowedValues = commonDao.selectList("fileName.queryId", constraintAnnotation.cmmCdId());
+//            allowedValueList.addAll(dbManagedAllowedValues);
         }
 
         // ###############################################################################
