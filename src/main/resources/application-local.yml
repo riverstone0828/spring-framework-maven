@@ -54,30 +54,3 @@ logger:
     interval-minutes: 5
     check-interval-millis: 1000
     use-immediately-write: false
-
-
-########################################################################################################################
-# LG U+ APIM
-# apim.domain-public: apim 공개 서버
-# apim.domain-private: apim 비공개 서버
-# apim.client-id: 내 APIM 프로젝트에서 조회 가능
-# apim.client-secret: 내 APIM 프로젝트에서 조회 가능
-# apim.hmac.shared-key: 외부 API에서 APIM Provider 서버에 접근할 때 복호화 키
-########################################################################################################################
-apim:
-  domain-public: "https://dev-openapi-pb.lguplus.co.kr"
-  domain-private: "https://dev-openapi-pv.lguplus.co.kr"
-  client-id: cliend-id
-  client-secret: client-secret
-  hmac-shared-key: ENC(N1TFps+HtWB4qkruGGphKgSqMuE3PVHcQ3P7kSphhrk/wFIUMZ09vq064OlE3E6TW4akxkNDwpPLJJegIkXXEFlftcLc3C298qb+FGtLYTj+2G1gW3lbV9/hO/me0T6IXwoxo6NFdjhI8BgB+WTobZHToFK5CRNKVDIsv9AVz3U3TGhgbZKvAEDvhkuC2lVHWsEzUbPUQHl1q3eYjpzUNjKagn0Sf0wyYZFZe/Zhc2M=)
-
-
-
-########################################################################################################################
-# GCP
-# simba-jdbc-url: GCP Simba Library를 사용한 JDBC 커넥션 풀 연결 URL
-# impersonator-account-email: 권한을 가장받을 서비스 계정 (깡통 계정)
-########################################################################################################################
-gcp:
-  simba-jdbc-url: jdbc:bigquery://https://www.googleapis.com/bigquery/v2:443;ProjectId=%s;OAuthType=3;OAuthAccessToken=%s
-  project-id: your-project-id

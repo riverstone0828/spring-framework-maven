@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,25 +15,26 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 public class APIResponseInterceptor implements ResponseBodyAdvice<APIResponse<?>> {
 
     @Override
-    public boolean supports(MethodParameter returnType, @NonNull Class converterType) {
+    public boolean supports(MethodParameter returnType,
+            @NonNull Class<? extends HttpMessageConverter<?>> converterType) {
         return returnType.getParameterType() == APIResponse.class;
     }
 
     @Override
     public APIResponse<?> beforeBodyWrite(
-            APIResponse apiResponse,
+            APIResponse<?> apiResponse,
             @NonNull MethodParameter returnType,
             @NonNull MediaType selectedContentType,
-            @NonNull Class selectedConverterType,
+            @NonNull Class<? extends HttpMessageConverter<?>> selectedConverterType,
             @NonNull ServerHttpRequest request,
-            @NonNull ServerHttpResponse response
-    ) {
+            @NonNull ServerHttpResponse response) {
         if (apiResponse != null) {
             if (isErrorResponse(apiResponse)) {
                 response.getHeaders().add("BizError", "Y");
             } else {
                 response.getHeaders().add("BizError", "N");
             }
+            response.setStatusCode(apiResponse.status());
         }
         return apiResponse;
     }

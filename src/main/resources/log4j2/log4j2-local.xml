@@ -10,7 +10,7 @@
 
     <Appenders>
         <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
-            <PatternLayout pattern="${SERVICE_LOG_PATTERN}"/>
+            <PatternLayout pattern="${SERVICE_LOG_PATTERN}" charset="UTF-8"/>
         </Console>
 
        <RollingFile name ="RollingFileAppender">

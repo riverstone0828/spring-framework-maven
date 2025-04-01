@@ -1,8 +1,9 @@
 package co.kr.abacus.base.api.sample.controller;
 
 import co.kr.abacus.base.api.sample.dto.ValidatorSampleDTO;
+import co.kr.abacus.base.common.enums.CommonResponseEnum;
 import co.kr.abacus.base.common.response.APIResponse;
-import co.kr.abacus.base.common.response.CommonResponseEnum;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,6 @@ public class ValidatorSampleController {
 
     @PostMapping("/method-argument-validation")
     public APIResponse<Void> methodArgumentValidationTest(@Validated @RequestBody ValidatorSampleDTO dto) {
-        return APIResponse.success(CommonResponseEnum.SUCCESS);
+        return APIResponse.success(CommonResponseEnum.OK);
     }
 }

@@ -25,11 +25,30 @@ Content-Type: application/json
   "genderNumber": 3
 }
 
-### 3. EXCEPTION - gender, genderNumber
+### 4. EXCEPTION - gender, genderNumber
 POST http://localhost:8080/base/api/validator/method-argument-validation
 Content-Type: application/json
 
 {
   "gender": "male1",
   "genderNumber": 3
+}
+
+### 5. EXCEPTION - name (빈 문자열)
+POST http://localhost:8080/base/api/validator/method-argument-validation
+Content-Type: application/json
+
+{
+  "name": "",
+  "gender": "male",
+  "genderNumber": 1
+}
+
+### 6. EXCEPTION - name (null)
+POST http://localhost:8080/base/api/validator/method-argument-validation
+Content-Type: application/json
+
+{
+  "gender": "male",
+  "genderNumber": 1
 }
