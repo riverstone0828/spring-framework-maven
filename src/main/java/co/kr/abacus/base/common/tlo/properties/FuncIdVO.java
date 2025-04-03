@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class FuncIdVO {
-    private String method;
-    private String uri;
-    private String funcId;
+        private String method;
+        private String uri;
+        private String funcId;
 }

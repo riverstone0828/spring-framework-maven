@@ -1,8 +1,5 @@
 package co.kr.abacus.base.common.tlo;
 
-import co.kr.abacus.base.common.tlo.properties.TloLoggerProperties;
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -14,24 +11,37 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.StringJoiner;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.springframework.stereotype.Component;
+
+import co.kr.abacus.base.common.tlo.properties.TloLoggerProperties;
+
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class TloLogger {
     private static final Integer DEFAULT_INTERVAL = 5;
     private static final Integer DEFAULT_CHECK_INTERVAL = 1000;
     private final AtomicReference<RandomAccessFile> currentFile = new AtomicReference<>();
+    private final TloLoggerProperties properties;
 
-    private final TloLoggerProperties tloLoggerProperties;
-    private final Timer timer;
+    private final Timer timer = new Timer("tslRotator");
     private FileChannel currentFileChannel;
     private String currentFileName;
 
-    public TloLogger(final TloLoggerProperties tloLoggerProperties) {
-        this.tloLoggerProperties = tloLoggerProperties;
-        this.timer = new Timer("tslRotator");
-        if (Boolean.TRUE.equals(tloLoggerProperties.getEnable())) {
+    @PostConstruct
+    public void init() {
+        if (Boolean.TRUE.equals(properties.getEnable()) && Boolean.TRUE.equals(properties.getEnableFileLog())) {
             this.timer.schedule(new TimerTask() {
                 public void run() {
                     if (TloLogger.this.currentFileName != null) {
@@ -50,9 +60,8 @@ public class TloLogger {
                             TloLogger.log.error("An error occurred while rotating TSL file.", var3);
                         }
                     }
-
                 }
-            }, 1000L, Optional.of(tloLoggerProperties.getCheckIntervalMillis()).orElse(DEFAULT_CHECK_INTERVAL));
+            }, 1000L, Optional.of(properties.getCheckIntervalMillis()).orElse(DEFAULT_CHECK_INTERVAL));
         }
     }
 
@@ -66,7 +75,13 @@ public class TloLogger {
     }
 
     public void write(Map<String, Object> tsl) {
+        if (!properties.getEnable() || !properties.getEnableFileLog()) {
+            return;
+        }
+
         try {
+            String fileName = getFileName();
+            generateFile(fileName);
             StringJoiner joiner = new StringJoiner("|");
             tsl.forEach((key, value) -> {
                 joiner.add(key + "=" + value);
@@ -74,23 +89,33 @@ public class TloLogger {
             String t = joiner + System.lineSeparator();
             log.info("TSL: {}", joiner);
             this.currentFileChannel.write(ByteBuffer.wrap(t.getBytes(StandardCharsets.UTF_8)));
-        } catch (IOException var4) {
-            log.error("Failed to write TSL log.", var4);
+        } catch (IOException e) {
+            log.error("TSL file write error", e);
         }
-
     }
 
     public void write(String tsl) {
         try {
-            log.debug("TSL: {}", tsl);
+            log.info("TSL: {}", tsl);
             this.currentFileChannel.write(ByteBuffer.wrap(tsl.getBytes(StandardCharsets.UTF_8)));
         } catch (IOException var3) {
             log.error("Failed to write TSL log.", var3);
         }
+    }
 
+    private String getFileName() {
+        return String.format("%s/%s_%s_%s.tsl",
+                properties.getBaseDir(),
+                properties.getServiceName(),
+                properties.getInstanceCode(),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
     }
 
     private void generateFile(String fileName) throws IOException {
+        if (!properties.getEnableFileLog()) {
+            return;
+        }
+
         Path path = Paths.get(fileName);
         File file = path.toFile();
         if (!file.exists()) {
@@ -98,23 +123,25 @@ public class TloLogger {
             Files.createFile(path);
             log.info("TSL file generated: {}", fileName);
         }
-
     }
 
     private String generateFileName() {
-        String instanceNumber = System.getenv("INSTANCE_NO") == null ? this.tloLoggerProperties.getInstanceCode() : System.getenv("INSTANCE_NO");
+        String instanceNumber = System.getenv("INSTANCE_NO") == null ? properties.getInstanceCode()
+                : System.getenv("INSTANCE_NO");
 
         LocalDateTime now = LocalDateTime.now();
-        int minute = now.getMinute() - now.getMinute() % Optional.of(this.tloLoggerProperties.getIntervalMinutes()).orElse(DEFAULT_INTERVAL);
+        int minute = now.getMinute()
+                - now.getMinute() % Optional.of(properties.getIntervalMinutes()).orElse(DEFAULT_INTERVAL);
         String fileDate = now.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String fileTime = String.format("%02d", now.getHour()) + String.format("%02d", minute);
-        String baseDir = this.tloLoggerProperties.getBaseDir();
+        String baseDir = properties.getBaseDir();
         if (!baseDir.endsWith(File.separator)) {
             baseDir = baseDir + File.separator;
         }
 
         baseDir = baseDir + fileDate + File.separator;
-        String fileName = this.tloLoggerProperties.getInstanceName() + "." + instanceNumber + "." + fileDate + fileTime + ".log";
+        String fileName = properties.getInstanceName() + "." + instanceNumber + "." + fileDate + fileTime
+                + ".log";
         return baseDir + fileName;
     }
 
@@ -125,7 +152,7 @@ public class TloLogger {
         }
 
         FileChannel channel = this.currentFile.get().getChannel();
-        channel.force(Optional.of(this.tloLoggerProperties.getUseImmediatelyWrite()).orElse(false));
+        channel.force(Optional.of(properties.getUseImmediatelyWrite()).orElse(false));
         this.currentFileChannel = channel;
         this.currentFileName = fileName;
         log.debug("Ready to write TSL file: {}", fileName);

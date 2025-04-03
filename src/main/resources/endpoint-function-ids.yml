@@ -20,3 +20,9 @@ base-project:
       - method: GET
         uri: /sample
         func-id: 'FN01006'
+      - method: GET
+        uri: /tlo-test/user-agent
+        func-id: TLO_TEST_UA
+      - method: GET
+        uri: /tlo-test/tlo-logging
+        func-id: TLO_TEST_LOG

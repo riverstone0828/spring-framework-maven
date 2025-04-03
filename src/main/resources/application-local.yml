@@ -3,10 +3,16 @@ spring:
     activate:
       on-profile: local
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password:
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1200000
   h2:
     console:
       enabled: true
@@ -23,8 +29,6 @@ springdoc:
   title: Abacus base project
   version: v0.0.0
   description: 애버포애버
-  cache:
-    disabled: true
   swagger-ui:
     enabled: true
     operations-sorter: alpha
@@ -36,9 +40,6 @@ springdoc:
     path: /api-docs/json
     groups:
       enabled: true
-  servers:
-    - url: http://localhost:8080/base/api
-      description: Localhost Server
 
 ########################################################################################################################
 # 통합 통계 로그
@@ -47,10 +48,22 @@ springdoc:
 logger:
   tlo:
     enable: true
+    enable-service-log: true
+    enable-file-log: false
     service-name: base-project
-    instance-name: base-project-instance
-    instance-code: '999'
+    instance-name: local
+    instance-code: "001"
     base-dir: ./logs/tlo
     interval-minutes: 5
     check-interval-millis: 1000
-    use-immediately-write: false
+    use-immediately-write: true
+
+mybatis:
+  mapper-locations: classpath:sql/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+    default-fetch-size: 100
+    default-statement-timeout: 30

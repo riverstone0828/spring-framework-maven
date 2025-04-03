@@ -95,6 +95,13 @@
             <version>${guava.version}</version>
         </dependency>
 
+        <!-- UserAgent Parser -->
+        <dependency>
+            <groupId>eu.bitwalker</groupId>
+            <artifactId>UserAgentUtils</artifactId>
+            <version>1.21</version>
+        </dependency>
+
         <!-- 외부 jar 파일 의존성 추가 (libs 폴더 내 jar 파일들) -->
         <!-- GoogleBigQueryJDBC42.jar -->
         <dependency>
@@ -233,6 +240,7 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
 

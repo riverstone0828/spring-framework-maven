@@ -1,19 +1,14 @@
 package co.kr.abacus.base.common.tlo;
 
+import org.springframework.stereotype.Component;
+import java.util.Optional;
 
+@Component
 public class TloThreadLocalComponent {
     private static final ThreadLocal<TloLoggerMessage> tloData = new InheritableThreadLocal<>();
 
-    public TloThreadLocalComponent() {
-    }
-
-    public static TloLoggerMessage getTloData() {
-        return tloData.get();
-    }
-
-
-    public static void setTloData(TloLoggerMessage tloLoggerMessage) {
-        tloData.set(tloLoggerMessage);
+    public static void setTloData(TloLoggerMessage message) {
+        tloData.set(message);
     }
 
     public static void clearThreadLocal() {
@@ -21,14 +16,14 @@ public class TloThreadLocalComponent {
     }
 
     public static void mergeWithBuilder(TloLoggerMessage.TloLoggerMessageBuilder builder) {
-        TloLoggerMessage threadLocalData = getTloData();
+        var threadLocalData = tloData.get();
         if (threadLocalData == null) {
             return;
         }
 
-        if (threadLocalData.getSid() != null) builder.sid(threadLocalData.getSid());
-        if (threadLocalData.getExtIf() != null && !threadLocalData.getExtIf().isEmpty())
-            builder.extIf(threadLocalData.getExtIf());
-
+        Optional.ofNullable(threadLocalData.sid()).ifPresent(builder::sid);
+        Optional.ofNullable(threadLocalData.extIf())
+                .filter(list -> !list.isEmpty())
+                .ifPresent(builder::extIf);
     }
 }

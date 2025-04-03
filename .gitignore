@@ -34,3 +34,6 @@ build/
 
 ### 개인 정보 ###
 src/main/resources/application-private.yml
+
+### 로그 파일 ###
+/logs/
