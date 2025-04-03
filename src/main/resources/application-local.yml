@@ -58,6 +58,16 @@ logger:
     check-interval-millis: 1000
     use-immediately-write: true
 
+########################################################################################################################
+# MyBatis
+# mybatis.mapper-locations: MyBatis Mapper XML 파일의 위치를 지정
+# mybatis.configuration.map-underscore-to-camel-case: DB 컬럼명의 언더스코어를 자바 카멜케이스로 자동 매핑
+# mybatis.configuration.cache-enabled: MyBatis 캐시 사용 여부 설정
+# mybatis.configuration.lazy-loading-enabled: 지연 로딩 사용 여부 설정
+# mybatis.configuration.aggressive-lazy-loading: 즉시 로딩 사용 여부 설정 (false: 지연 로딩 우선)
+# mybatis.configuration.default-fetch-size: 조회 결과를 가져올 때의 기본 페치 크기 설정
+# mybatis.configuration.default-statement-timeout: SQL 실행 시 타임아웃 시간(초) 설정
+########################################################################################################################
 mybatis:
   mapper-locations: classpath:sql/**/*.xml
   configuration:

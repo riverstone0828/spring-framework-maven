@@ -1,0 +1,7 @@
+### Health Check
+GET http://localhost:8080/base/api/actuator/health
+Accept: application/json
+
+### Info
+GET http://localhost:8080/base/api/actuator/info
+Accept: application/json 
